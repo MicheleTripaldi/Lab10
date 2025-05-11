@@ -10,9 +10,26 @@ class DAO():
         result = []
         cursor = conn.cursor(dictionary = True)
 
-        query = """select *
-                    from country"""
+        query = """select * from country"""
         cursor.execute(query)
+
+        for row in cursor:
+            result.append(Country(**row))
+        cursor.close()
+        conn.close()
+        return result
+
+    @staticmethod
+    def getCountry(anno):
+        conn = DBConnect.get_connection()
+        result = []
+        cursor = conn.cursor(dictionary=True)
+
+        query = """select distinct ca.StateAbb, ca.CCode, ca.StateNme
+                       from countries.contiguity c, countries.country ca
+                       where c.`year` <= %s
+                        and c.state1no = ca.CCode"""
+        cursor.execute(query, (anno,))
 
         for row in cursor:
             result.append(Country(**row))

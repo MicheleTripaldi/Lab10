@@ -1,4 +1,6 @@
 import flet as ft
+from database.DAO import DAO
+from model.model import Model
 
 
 class Controller:
@@ -28,8 +30,29 @@ class Controller:
 
         n = 1
         for arco in lista_archi:
-            self._view._txt_result.controls.append(ft.Text(f" Confine{n}-{arco}"))
+
+            self._view._txt_result.controls.append(ft.Text(f" Stato{n}-{arco}"))
+            #self._view._txt_result.controls.append(ft.Text(f" Grado Nodo:{len(self._model.gradoNodo(arco))}"))
             n += 1
 
+        lista_nodi = []
+        lista_nodi = DAO.getCountry(anno)
+        n = 1
+        for nodo in lista_nodi:
+            if self._model.gradoNodo(nodo) != 0:
+                self._view._txt_result.controls.append(ft.Text(f" Stato{n}-{nodo}: Ha grado{self._model.gradoNodo(nodo)}"))
+                n += 1
+
+        self._view._txt_result.controls.append(ft.Text(f"Il numero di componenti connesse del garfo é:{self._model.getPartiConnesse()}"))
+
         self._view.update_page()
+
+    def handleRaggiungibili(self, e):
+        pass
+
+    def fillddStati(self):
+        lista_stati = self._model.stati()
+        for stato in lista_stati:
+            self._view._ddStati.options.append(ft.dropdown.Option(text=stato.StateNme, key=stato.CCode))
+
 
