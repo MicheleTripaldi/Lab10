@@ -48,7 +48,27 @@ class Controller:
         self._view.update_page()
 
     def handleRaggiungibili(self, e):
-        pass
+        stato = self._view._ddStati.value
+        anno = self._view._txtAnno.value
+        if stato is None or stato == "":
+            self._view.create_alert(" Inserire lo stato valido")
+            return
+        if anno is None or anno == "" or not anno.isdigit():
+            self._view.create_alert(" Inserire l'anno")
+            return
+        if int(anno) < 1861 or int(anno) > 2016:
+            self._view.create_alert(" Inserire un anno valido tra il 1861 e il 2016")
+            return
+        self._model.buildGraph(anno)
+        self._view._txt_result.controls.clear()
+        listaRagg = self._model.getComponenteConnessa(stato)
+        self._view._txt_result.controls.append(ft.Text(f"Ho calcolato la componente connessa:"))
+        for c in listaRagg:
+            self._view._txt_result.controls.append(ft.Text(f"{c.StateNme} è un vicino"))
+        self._view.update_page()
+
+
+
 
     def fillddStati(self):
         lista_stati = self._model.stati()

@@ -29,6 +29,12 @@ class Model:
     def getPartiConnesse(self):
         conn = list(nx.connected_components(self._grafo)) # aggiungere list, perchè il metodo no crea una lista, ma penso un dict
         return len(conn)
+
+    def getComponenteConnessa(self,stato):
+        conn = nx.node_connected_component(self._grafo, self._idMapCountry[int(stato)])
+        return conn
+
+
     def addAllEdges(self,year):
         #self._grafo.clear()
 
